@@ -4,7 +4,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.utils.dates import days_ago
 
-from utils import extract_currency, extract_data, join_tables
+from homework1_dag_task4.utils import extract_currency, extract_data, join_tables
 
 CONN = sqlite3.connect("test_db")
 
@@ -13,14 +13,16 @@ dag = DAG(dag_id="dag4", schedule_interval="@daily", start_date=days_ago(1))
 extract_currency_op = PythonOperator(
     task_id="extract_currency",
     python_callable=extract_currency,
-    op_kwargs={"date": " 2021-01-01", "table_name": "currency", "conn": CONN},
+    op_kwargs={"date": "2021-01-01", "table_name": "currency", "conn": CONN},
+    dag=dag
 )
 
 
 extract_data_op = PythonOperator(
     task_id="extract_data",
     python_callable=extract_data,
-    op_kwargs={"date": " 2021-01-01", "table_name": "data", "conn": CONN},
+    op_kwargs={"date": "2021-01-01", "table_name": "data", "conn": CONN},
+    dag=dag
 )
 
 
@@ -33,6 +35,7 @@ join_tables_op = PythonOperator(
         "table2": "data",
         "conn": CONN,
     },
+    dag=dag
 )
 
 extract_currency_op >> extract_data_op >> join_tables_op
