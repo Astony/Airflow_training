@@ -1,12 +1,11 @@
 import pandas as pd
 from airflow import DAG
 from datetime import timedelta, datetime
-import sqlite3
 from airflow.operators.python import PythonOperator
 from airflow.providers.sqlite.hooks.sqlite import SqliteHook
 from airflow.providers.sqlite.operators.sqlite import SqliteOperator
 
-CONN = sqlite3.connect("example_db")
+# Я нашел файл базы данных в контейнере воркера. Добавил его в папку с дагом
 
 dag = DAG(
     dag_id='sqlite_dag',
